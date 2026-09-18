@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floria RP | FiveM Server Rules</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff6b35;
+            --secondary: #ff8c42;
+            --accent: #ffa94d;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--darker);
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 107, 53, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 107, 53, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -2;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+        }
+        .orb-1 { width: 400px; height: 400px; background: var(--primary); top: 10%; left: -10%; }
+        .orb-2 { width: 300px; height: 300px; background: var(--secondary); bottom: 10%; right: -5%; animation-delay: -5s; }
+        .orb-3 { width: 250px; height: 250px; background: #ff5500; top: 50%; left: 50%; animation-delay: -10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 20px 50px;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        .navbar.scrolled { padding: 15px 50px; background: rgba(10, 10, 10, 0.95); }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo i { font-size: 2rem; -webkit-text-fill-color: var(--primary); }
+
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 0;
+            width: 0; height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover { color: #fff; }
+        .nav-links a:hover::after { width: 100%; }
+
+        .mobile-menu-btn { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 120px 50px 80px;
+            overflow: hidden;
+        }
+        .hero-content { text-align: center; max-width: 900px; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+
+        .logo-container { margin-bottom: 40px; position: relative; display: flex; justify-content: center; align-items: center; }
+        .logo-wrapper {
+            position: relative;
+            display: inline-block;
+            border-radius: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.15), rgba(255, 140, 66, 0.15));
+            border: 2px solid rgba(255, 107, 53, 0.4);
+            box-shadow: 0 20px 80px rgba(255, 107, 53, 0.3), inset 0 0 80px rgba(255, 107, 53, 0.1);
+        }
+        .server-logo {
+            width: 320px; height: 320px;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 15px 40px rgba(255, 107, 53, 0.4));
+            animation: logoFloat 6s ease-in-out infinite;
+            border-radius: 20px;
+        }
+        @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .logo-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 450px; height: 450px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.5) 0%, transparent 70%);
+            z-index: -1;
+            animation: glowPulse 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes glowPulse { 0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.15); } }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p { font-size: 1.2rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 40px; max-width: 600px; }
+
+        .hero-stats { display: flex; justify-content: center; gap: 60px; margin-top: 40px; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat-number { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--secondary); display: block; }
+        .stat-label { color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; }
+
+        section { padding: 80px 50px; position: relative; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-tag {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 20px;
+            color: var(--primary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+        .section-header h2 { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 20px; }
+        .section-header p { color: rgba(255, 255, 255, 0.6); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+        .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; max-width: 1400px; margin: 0 auto; }
+        .rule-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        .rule-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        .rule-card:hover { transform: translateY(-10px) scale(1.02); border-color: rgba(255, 107, 53, 0.3); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(255, 107, 53, 0.1); }
+        .rule-card:hover::before { transform: scaleX(1); }
+
+        .rule-icon {
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 140, 66, 0.2));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .rule-card:hover .rule-icon { transform: rotate(-10deg) scale(1.1); background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+
+        .rule-number { position: absolute; top: 20px; right: 25px; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: rgba(255, 255, 255, 0.2); font-weight: 700; }
+        .rule-card h3 { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; margin-bottom: 12px; color: #fff; }
+        .rule-card p { color: rgba(255, 255, 255, 0.6); line-height: 1.7; margin-bottom: 15px; font-size: 0.95rem; }
+
+        .punishment { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .punishment.severe { background: rgba(255, 107, 53, 0.15); color: #ff8c69; border: 1px solid rgba(255, 107, 53, 0.3); }
+        .punishment.moderate { background: rgba(255, 193, 7, 0.15); color: #ffd54f; border: 1px solid rgba(255, 193, 7, 0.3); }
+        .punishment.minor { background: rgba(0, 255, 136, 0.15); color: #69f0ae; border: 1px solid rgba(0, 255, 136, 0.3); }
+
+        .filter-tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 12px 28px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .filter-btn:hover, .filter-btn.active { background: linear-gradient(135deg, var(--primary), #ff5500); border-color: transparent; color: #fff; box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3); }
+
+        .discord-section { background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(255, 107, 53, 0.1)); border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); }
+        .discord-box { max-width: 800px; margin: 0 auto; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 50px; text-align: center; position: relative; overflow: hidden; }
+        .discord-box::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(88, 101, 242, 0.1), transparent); animation: rotate 10s linear infinite; }
+        @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .discord-icon { width: 90px; height: 90px; background: linear-gradient(135deg, #5865f2, #7289da); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 25px; position: relative; z-index: 1; box-shadow: 0 20px 50px rgba(88, 101, 242, 0.4); }
+        .discord-box h3 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin-bottom: 15px; position: relative; z-index: 1; }
+        .discord-box p { color: rgba(255, 255, 255, 0.6); margin-bottom: 25px; position: relative; z-index: 1; }
+        .discord-btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 36px; background: #5865f2; color: #fff; text-decoration: none; border-radius: 50px; font-weight: 700; font-size: 1rem; position: relative; z-index: 1; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4); }
+        .discord-btn:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(88, 101, 242, 0.6); background: #7289da; }
+
+        .contact-section { background: linear-gradient(180deg, rgba(255, 107, 53, 0.05), transparent); border-top: 1px solid var(--glass-border); }
+        .contact-container { max-width: 700px; margin: 0 auto; }
+        .contact-form { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 50px; position: relative; }
+        .contact-form::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 30px 30px 0 0; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; margin-bottom: 10px; color: rgba(255, 255, 255, 0.8); font-weight: 600; font-size: 0.95rem; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 15px 20px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); border-radius: 15px; color: #fff; font-family: 'Rajdhani', sans-serif; font-size: 1rem; transition: all 0.3s ease; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 20px rgba(255, 107, 53, 0.2); }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255, 255, 255, 0.3); }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .submit-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--primary), #ff5500); border: none; border-radius: 15px; color: #fff; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s ease; box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3); position: relative; overflow: hidden; }
+        .submit-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.5s ease; }
+        .submit-btn:hover::before { left: 100%; }
+        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255, 107, 53, 0.5); }
+        .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        .success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(20px); z-index: 10000; display: none; align-items: center; justify-content: center; flex-direction: column; animation: fadeInOverlay 0.5s ease; }
+        .success-overlay.show { display: flex; }
+        @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+        .success-content { text-align: center; padding: 40px; max-width: 600px; }
+        .success-icon { width: 120px; height: 120px; background: linear-gradient(135deg, #00ff88, #00cc6a); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #fff; margin: 0 auto 30px; animation: successPulse 2s ease-in-out infinite; box-shadow: 0 20px 60px rgba(0, 255, 136, 0.4); }
+        @keyframes successPulse { 0%, 100% { transform: scale(1); box-shadow: 0 20px 60px rgba(0, 255, 136, 0.4); } 50% { transform: scale(1.1); box-shadow: 0 30px 80px rgba(0, 255, 136, 0.6); } }
+        .success-overlay h2 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: #00ff88; margin-bottom: 15px; text-transform: uppercase; }
+        .success-overlay p { color: rgba(255, 255, 255, 0.8); font-size: 1.2rem; margin-bottom: 30px; }
+        .countdown-bar { width: 300px; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; overflow: hidden; margin: 0 auto; }
+        .countdown-progress { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 3px; width: 100%; animation: countdown 4s linear forwards; }
+        @keyframes countdown { from { width: 100%; } to { width: 0%; } }
+        .countdown-text { margin-top: 15px; color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; }
+
+        .contact-alt { display: flex; justify-content: center; gap: 30px; margin-top: 40px; flex-wrap: wrap; }
+        .contact-method { display: flex; align-items: center; gap: 12px; padding: 15px 25px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 50px; color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: all 0.3s ease; }
+        .contact-method:hover { background: rgba(255, 107, 53, 0.1); border-color: var(--primary); color: #fff; transform: translateY(-3px); }
+        .contact-method i { font-size: 1.2rem; color: var(--primary); }
+
+        .faq-container { max-width: 900px; margin: 0 auto; }
+        .faq-item { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; margin-bottom: 15px; overflow: hidden; transition: all 0.3s ease; }
+        .faq-item:hover { border-color: rgba(255, 140, 66, 0.3); }
+        .faq-question { padding: 22px 28px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; font-size: 1rem; }
+        .faq-question i { transition: transform 0.3s ease; color: var(--secondary); }
+        .faq-item.active .faq-question i { transform: rotate(180deg); }
+        .faq-answer { padding: 0 28px; max-height: 0; overflow: hidden; transition: all 0.4s ease; color: rgba(255, 255, 255, 0.6); line-height: 1.7; }
+        .faq-item.active .faq-answer { padding: 0 28px 22px; max-height: 500px; }
+
+        footer { padding: 50px 50px 30px; border-top: 1px solid var(--glass-border); text-align: center; }
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-logo { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 900; margin-bottom: 20px; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; flex-wrap: wrap; }
+        .footer-links a { color: rgba(255, 255, 255, 0.6); text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        .footer-links a:hover { color: var(--secondary); }
+        .socials { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
+        .social-btn { width: 45px; height: 45px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; transition: all 0.3s ease; }
+        .social-btn:hover { background: var(--primary); border-color: var(--primary); transform: translateY(-5px) rotate(360deg); }
+        .copyright { color: rgba(255, 255, 255, 0.4); font-size: 0.85rem; padding-top: 25px; border-top: 1px solid var(--glass-border); }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--dark); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), var(--secondary)); border-radius: 5px; }
+
+        .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 968px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .hero-stats { gap: 40px; }
+            .rules-grid { grid-template-columns: 1fr; }
+            section { padding: 60px 20px; }
+            .navbar { padding: 15px 20px; }
+            .discord-box, .contact-form { padding: 35px 25px; }
+            .server-logo { width: 250px; height: 250px; }
+            .logo-glow { width: 350px; height: 350px; }
+            .hero { padding: 100px 20px 60px; }
+            .contact-alt { flex-direction: column; align-items: center; }
+            .success-overlay h2 { font-size: 1.8rem; }
+            .success-icon { width: 80px; height: 80px; font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-content">
+            <div class="success-icon"><i class="fas fa-check"></i></div>
+            <h2>Message Sent!</h2>
+            <p>Thank you for contacting us. We'll get back to you as soon as possible.</p>
+            <div class="countdown-bar"><div class="countdown-progress"></div></div>
+            <div class="countdown-text">Redirecting to home in 4 seconds...</div>
+        </div>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo"><i class="fas fa-fire"></i>FLORIA RP</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#rules">Rules</a></li>
+                <li><a href="#discord">Discord</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="logo-container fade-in">
+                <div class="logo-glow"></div>
+                <div class="logo-wrapper">
+                    <img src="https://cdn.discordapp.com/attachments/1541255382838804494/1542089519996731433/logosssss.webp?ex=6aada008&is=6aac4e88&hm=76fc7cce3c1169fd6f2264348d4bc1f726297a2f62649f4a2d0c7752412d7a94&" alt="Floria RP Logo" class="server-logo">
+                </div>
+            </div>
+            <h1 class="fade-in">Welcome to <span>Floria RP</span></h1>
+            <p class="fade-in">Immersive FiveM roleplay experience with strict rules to ensure quality gameplay for everyone.</p>
+            <div class="hero-stats fade-in">
+                <div class="stat"><span class="stat-number" id="playerCount">247</span><span class="stat-label">Players Online</span></div>
+                <div class="stat"><span class="stat-number">15K+</span><span class="stat-label">Discord Members</span></div>
+                <div class="stat"><span class="stat-number">99%</span><span class="stat-label">Uptime</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="rules">
+        <div class="section-header fade-in">
+            <span class="section-tag">Server Guidelines</span>
+            <h2>Rules & Regulations</h2>
+            <p>Breaking these rules will result in warnings, temporary bans, or permanent bans depending on severity.</p>
+        </div>
+        <div class="filter-tabs fade-in">
+            <button class="filter-btn active" onclick="filterRules('all')">All Rules</button>
+            <button class="filter-btn" onclick="filterRules('general')">General</button>
+            <button class="filter-btn" onclick="filterRules('roleplay')">Roleplay</button>
+            <button class="filter-btn" onclick="filterRules('combat')">Combat</button>
+            <button class="filter-btn" onclick="filterRules('vehicles')">Vehicles</button>
+        </div>
+        <div class="rules-grid" id="rulesGrid">
+            <div class="rule-card fade-in" data-category="general">
+                <span class="rule-number">#01</span>
+                <div class="rule-icon"><i class="fas fa-user-shield"></i></div>
+                <h3>Trash Tallk</h3>
+                <p>ممنوع السب والشتم والعنصرية بأي شكل من الأشكال. يجب التعامل مع جميع اللاعبين باحترام وأدب في الشات والصوت.</p>
+                <span class="punishment severe"><i class="fas fa-ban"></i> ban perm</span>
+            </div>
+            <div class="rule-card fade-in" data-category="general">
+                <span class="rule-number">#02</span>
+                <div class="rule-icon"><i class="fas fa-bug"></i></div>
+                <h3>cheat</h3>
+                <p>ممنوع استخدام أي برامج غش أو هاكات أو استغلال ثغرات اللعبة. أي استخدام يؤدي إلى باند فوري دائم.</p>
+                <span class="punishment severe"><i class="fas fa-ban"></i> ban perm+ HWID</span>
+            </div>
+            <div class="rule-card fade-in" data-category="general">
+                <span class="rule-number">#03</span>
+                <div class="rule-icon"><i class="fas fa-comments"></i></div>
+                <h3>Invite</h3>
+                <p>ممنوع الإعلان عن سيرفرات أخرى أو إرسال روابط ديسكورد بدون إذن الإدارة. يشمل هذا الرسائل الخاصة.</p>
+                <span class="punishment moderate"><i class="fas fa-clock"></i> ban 3days</span>
+            </div>
+            <div class="rule-card fade-in" data-category="roleplay">
+                <span class="rule-number">#04</span>
+                <div class="rule-icon"><i class="fas fa-theater-masks"></i></div>
+                <h3>Power Gaming</h3>
+                <p>ممنوع فرض أفعال غير واقعية على اللاعبين أو استخدام قوى خارقة. يجب اللعب بواقعية تامة.</p>
+                <span class="punishment moderate"><i class="fas fa-clock"></i> ban 24-48 H</span>
+            </div>
+            <div class="rule-card fade-in" data-category="roleplay">
+                <span class="rule-number">#05</span>
+                <div class="rule-icon"><i class="fas fa-database"></i></div>
+                <h3>Meta Gaming</h3>
+                <h14><p>ممنوع استخدام معلومات من خارج اللعبة (ديسكورد، ستريم) داخل الشخصية. كل معلوماتك لازم تجيبها IC.</p></h14>
+                <span class="punishment moderate"><i class="fas fa-clock"></i> باند 3 أيام</span>
+            </div>
+            <div class="rule-card fade-in" data-category="roleplay">
+                <span class="rule-number">#06</span>
+                <div class="rule-icon"><i class="fas fa-skull"></i></div>
+                <h3>New life rp</h3>
+                <p>إذا ماتت شخصيتك، تنسى كل اللي صار قبل الموت. ممنوع الرجوع لمنطقة الموت لمدة 15 دقيقة.</p>
+                <span class="punishment moderate"><i class="fas fa-clock"></i> باند 24 ساعة</span>
+            </div>
+            <div class="rule-card fade-in" data-category="roleplay">
+                <span class="rule-number">#07</span>
+                <div class="rule-icon"><i class="fas fa-fist-raised"></i></div>
+                <h3>Fail RP</h3>
+                <p>أي تصرف غير واقعي يكسر الانغمار. يشمل القيادة الغريبة، تجاهل الإصابات، عدم الخوف على حياتك.</p>
+                <span class="punishment minor"><i class="fas fa-exclamation-triangle"></i> تحذير / كيك</span>
+            </div>
+            <div class="rule-card fade-in" data-category="combat">
+                <span class="rule-number">#08</span>
+                <div class="rule-icon"><i class="fas fa-crosshairs"></i></div>
+                <h3>Free Kill- FRK</h3>
+                <p>ممنوع القتل بدون سبب RP قوي. لازم يكون فيه تفاعل وبناء للموقف قبل استخدام القوة المميتة.</p>
+                <span class="punishment severe"><i class="fas fa-clock"></i> باند 7 أيام</span>
+            </div>
+            <div class="rule-card fade-in" data-category="combat">
+                <span class="rule-number">#09</span>
+                <div class="rule-icon"><i class="fas fa-car-crash"></i></div>
+                <h3>Car kill- CRK</h3>
+                <p>ممنوع استخدام المركبات كأسلحة للقتل أو الدهس العمدي للاعبين بدون سبب RP.</p>
+                <span class="punishment moderate"><i class="fas fa-clock"></i> باند 3 أيام</span>
+            </div>
+            <div class="rule-card fade-in" data-category="combat">
+                <span class="rule-number">#10</span>
+                <div class="rule-icon"><i class="fas fa-sign-out-alt"></i></div>
+                <h3>ALT+f4</h3>
+                <p>ممنوع الخروج من السيرفر أثناء القتال أو عندما تكون مصاب لتجنب العواقب.</p>
+                <span class="punishment severe"><i class="fas fa-clock"></i> باند 5 أيام</span>
+            </div>
+            <div class="rule-card fade-in" data-category="vehicles">
+                <span class="rule-number">#11</span>
+                <div class="rule-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <h3>القيادة الواقعية</h3>
+                <p>لازم تسوق بشكل واقعي. ممنوع الدرفت العشوائي والسرعة المفرطة في المناطق السكنية.</p>
+                <span class="punishment minor"><i class="fas fa-exclamation-triangle"></i> غرامة / حجز</span>
+            </div>
+            <div class="rule-card fade-in" data-category="vehicles">
+                <span class="rule-number">#12</span>
+                <div class="rule-icon"><i class="fas fa-ambulance"></i></div>
+                <h3>Police car</h3>
+                <p><h4>ممنوع سرقة أو إساءة استخدام مركبات الشرطة والإسعاف بدون سيناريو RP مناسب.,</h4></p>
+                <span class="punishment moderate"><i class="fas fa-clock"></i> باند يومين</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="discord-section" id="discord">
+        <div class="discord-box fade-in">
+            <div class="discord-icon"><i class="fab fa-discord"></i></div>
+            <h3>Join Our Community</h3>
+            <p>Connect with 15,000+ players, get support, apply for whitelisted jobs, and stay updated with announcements.</p>
+            <a href="https://discord.gg/VJbdeUBbj" target="_blank" class="discord-btn"><i class="fab fa-discord"></i> Join Discord Server</a>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <div class="section-header fade-in">
+            <span class="section-tag">Get In Touch</span>
+            <h2>Contact Support</h2>
+            <p>Need help? Have a question? Send us a message and we'll get back to you as soon as possible.</p>
+        </div>
+        <div class="contact-container fade-in">
+            <iframe name="formSubmitFrame" id="formSubmitFrame" style="display:none;"></iframe>
+            <form class="contact-form" id="contactForm" action="https://formsubmit.co/ouail24belkhir@gmail.com" method="POST" target="formSubmitFrame">
+                <input type="hidden" name="_subject" value="Floria RP - New Support Message">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
+                <div class="form-group">
+                    <label for="name"><i class="fas fa-user"></i> Your Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Your Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject"><i class="fas fa-tag"></i> Subject</label>
+                    <select id="subject" name="subject" required>
+                        <option value="" disabled selected>Select a topic</option>
+                        <option value="Ban Appeal">Ban Appeal</option>
+                        <option value="Bug Report">Bug Report</option>
+                        <option value="Player Report">Report a Player</option>
+                        <option value="Technical Support">Technical Support</option>
+                        <option value="Donation Issue">Donation Issue</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message"><i class="fas fa-comment-alt"></i> Message</label>
+                    <textarea id="message" name="message" placeholder="Describe your issue or question in detail..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="discord"><i class="fab fa-discord"></i> Discord Username (Optional)</label>
+                    <input type="text" id="discord" name="discord" placeholder="Example: username#1234">
+                </div>
+                <button type="submit" class="submit-btn" id="submitBtn"><i class="fas fa-paper-plane"></i> Send Message</button>
+            </form>
+            <div class="contact-alt fade-in">
+                <a href="mailto:ouail24belkhir@gmail.com" class="contact-method"><i class="fas fa-envelope"></i><span>ouail24belkhir@gmail.com</span></a>
+                <a href="https://discord.gg/VJbdeUBbj" target="_blank" class="contact-method"><i class="fab fa-discord"></i><span>Discord Support</span></a>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq">
+        <div class="section-header fade-in">
+            <span class="section-tag">Questions</span>
+            <h2>Frequently Asked</h2>
+            <p>Common questions about our server rules and gameplay.</p>
+        </div>
+        <div class="faq-container">
+            <div class="faq-item fade-in">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>How do I appeal a ban?</span><i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer"><p>You can appeal bans through our Discord ticket system. Create a ticket in #support and provide your Steam ID, reason for ban, and a sincere explanation. Appeals are typically reviewed within 24-48 hours.</p></div>
+            </div>
+            <div class="faq-item fade-in">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>What is considered "valid RP reason" for combat?</span><i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer"><p>Valid RP reasons include: ongoing gang conflicts with prior interaction, self-defense when your life is threatened, defending property during active robbery, or police using appropriate force.</p></div>
+            </div>
+            <div class="faq-item fade-in">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>Can I stream on this server?</span><i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer"><p>Yes! We encourage content creation. Add [FloriaRP] to your stream title. Be aware that stream sniping is against the rules.</p></div>
+            </div>
+            <div class="faq-item fade-in">
+                <div class="faq-question" onclick="toggleFaq(this)"><span>How do I join the police or EMS?</span><i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer"><p>Whitelisted jobs require an application on our Discord. You must have at least 20 hours playtime, clean record, and pass an interview.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">FLORIA RP</div>
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#rules">Rules</a>
+                <a href="#discord">Discord</a>
+                <a href="#contact">Contact</a>
+                <a href="#faq">FAQ</a>
+            </div>
+            <div class="socials">
+                <a href="https://discord.gg/tYCayvUmmf" class="social-btn" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="social-btn"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <div class="copyright"><p>&copy; 2025 Floria RP. All rights reserved. Not affiliated with Rockstar Games.</p></div>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        });
+
+        function filterRules(category) {
+            const cards = document.querySelectorAll('.rule-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 10);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => card.style.display = 'none', 300);
+                }
+            });
+        }
+
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            const allItems = document.querySelectorAll('.faq-item');
+            allItems.forEach(faq => { if (faq !== item) faq.classList.remove('active'); });
+            item.classList.toggle('active');
+        }
+
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, observerOptions);
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        function animateCounter() {
+            const counter = document.getElementById('playerCount');
+            const target = 247;
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) { counter.textContent = target; clearInterval(timer); }
+                else counter.textContent = Math.floor(current);
+            }, 30);
+        }
+
+        const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) { animateCounter(); heroObserver.unobserve(entry.target); }
+            });
+        }, { threshold: 0.5 });
+        heroObserver.observe(document.querySelector('.hero'));
+
+        document.querySelectorAll('.rule-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 30;
+                const rotateY = (centerX - x) / 30;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) scale(1.02)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        const contactForm = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formSubmitFrame = document.getElementById('formSubmitFrame');
+        const successOverlay = document.getElementById('successOverlay');
+
+        contactForm.addEventListener('submit', function(e) {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+            formSubmitFrame.onload = function() {
+                successOverlay.classList.add('show');
+                contactForm.reset();
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                submitBtn.disabled = false;
+                setTimeout(() => {
+                    successOverlay.classList.remove('show');
+                    window.location.href = '#home';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 4000);
+            };
+        });
+    </script>
+</body>
+</html>
